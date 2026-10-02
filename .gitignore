@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+.venv/
+venv/
+
+# Kết quả train / log
+outputs/
+logs/
+runs/
+weight/
+*.log
+
+# Checkpoint tự train (giữ lại pretrained gốc)
+*.pth
+*.pt
+*.onnx
+*.engine
+!checkpoint/pretrained/*.pth
+
+# Dataset (không đưa dữ liệu lên git)
+data/*
+!data/.gitkeep
+
+# Ảnh/video thử nghiệm
+test.*
+*_pred.*
+torch_results.*
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
