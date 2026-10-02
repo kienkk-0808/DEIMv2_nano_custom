@@ -23,7 +23,8 @@ from engine.core import YAMLConfig
 def main(args, ):
     """main
     """
-    cfg = YAMLConfig(args.config, resume=args.resume)
+    extra = {'num_classes': args.num_classes} if args.num_classes else {}
+    cfg = YAMLConfig(args.config, resume=args.resume, **extra)
 
     if 'HGNetv2' in cfg.yaml_cfg:
         cfg.yaml_cfg['HGNetv2']['pretrained'] = False
@@ -79,6 +80,14 @@ def main(args, ):
         do_constant_folding=True,
     )
 
+    # Exporter mới của torch tách weight ra file .data riêng → nhúng lại để chỉ còn 1 file .onnx
+    import onnx
+    m = onnx.load(output_file)  # tự nạp external data nếu có
+    onnx.save(m, output_file, save_as_external_data=False)
+    data_file = output_file + '.data'
+    if os.path.exists(data_file):
+        os.remove(data_file)
+
     if args.check:
         import onnx
         onnx_model = onnx.load(output_file)
@@ -100,8 +109,9 @@ if __name__ == '__main__':
 
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument('--config', '-c', default='configs/dfine/dfine_hgnetv2_l_coco.yml', type=str, )
+    parser.add_argument('--config', '-c', default='configs/deimv2_nano_custom.yml', type=str, )
     parser.add_argument('--resume', '-r', type=str, )
+    parser.add_argument('--num-classes', type=int, help='số lớp của model đã train')
     parser.add_argument('--opset', type=int, default=17,)
     parser.add_argument('--check',  action='store_true')
     parser.add_argument('--simplify',  action='store_true')
