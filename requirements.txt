@@ -1,0 +1,10 @@
+﻿torch>=2.0
+torchvision>=0.15
+faster-coco-eval>=1.6.6
+pycocotools
+PyYAML
+scipy
+Pillow
+tensorboard
+calflops
+transformers

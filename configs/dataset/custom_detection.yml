@@ -1,0 +1,44 @@
+﻿task: detection
+
+evaluator:
+  type: CocoEvaluator
+  iou_types: ['bbox', ]
+
+num_classes: 80 # train.py ghi đè theo data.yaml
+remap_mscoco_category: False
+
+# Dataset định dạng YOLO: img_folder + label_folder (mặc định thay `images` -> `labels`)
+train_dataloader:
+  type: DataLoader
+  dataset:
+    type: YoloDetection
+    img_folder: /data/yourdataset/images/train
+    label_folder: ~
+    class_names: ~
+    return_masks: False
+    transforms:
+      type: Compose
+      ops: ~
+  shuffle: True
+  num_workers: 4
+  drop_last: True
+  collate_fn:
+    type: BatchImageCollateFunction
+
+
+val_dataloader:
+  type: DataLoader
+  dataset:
+    type: YoloDetection
+    img_folder: /data/yourdataset/images/val
+    label_folder: ~
+    class_names: ~
+    return_masks: False
+    transforms:
+      type: Compose
+      ops: ~
+  shuffle: False
+  num_workers: 4
+  drop_last: False
+  collate_fn:
+    type: BatchImageCollateFunction
